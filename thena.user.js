@@ -336,7 +336,16 @@
       return;
     }
     let aprText = aprElement.textContent.trim();
-    let apr = parseFloat(aprText.replace(/[^\d.-]/g, "")) / 100; // to decimal
+    let apr;
+
+    // Handle K format (e.g., 1.12K = 1120%)
+    if (aprText.includes("K")) {
+      let aprValue = parseFloat(aprText.replace(/[^\d.]/g, ""));
+      apr = (aprValue * 1000) / 100; // Convert K% to decimal
+    } else {
+      apr = parseFloat(aprText.replace(/[^\d.-]/g, "")) / 100; // Normal percentage to decimal
+    }
+
     if (isNaN(apr)) {
       log("Invalid APR");
       return;
